@@ -5,7 +5,27 @@ const User = require('../models/user');
 const app = express();
 
 app.get('/user', (req, res) => {
-    res.json('get usuario');
+
+    let from = Number(req.query.from) || 0; 
+
+    let limit = Number(req.query.limit) || 5;
+
+    User.find({})
+        .skip(from)
+        .limit(limit)
+        .exec( (err, users) => {
+            if( err ) {
+                return res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                users
+            });
+        });
 });
 
 app.post('/user', (req, res) => {
