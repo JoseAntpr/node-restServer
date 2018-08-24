@@ -7,10 +7,9 @@ const app = express();
 app.get('/user', (req, res) => {
 
     let from = Number(req.query.from) || 0; 
-
     let limit = Number(req.query.limit) || 5;
 
-    User.find({})
+    User.find({}, 'name state google email role')
         .skip(from)
         .limit(limit)
         .exec( (err, users) => {
@@ -88,8 +87,33 @@ app.put('/user/:id', (req, res) => {
     
 });
 
-app.delete('/user', (req, res) => { 
-    res.json('delete Usuario');
+app.delete('/user/:id', (req, res) => { 
+
+    let id = req.params.id;
+
+    User.findByIdAndRemove(id, (err, deletedUser) => {
+        if( err ) {
+            return res.status(400).json({
+                ok: false,
+                error: err
+                
+            }); 
+        };
+
+        if( !deletedUser ) {
+            return res.status(400).json({
+                ok: false,
+                error: {
+                    message: 'Usuario no encontrado',
+                }
+            }); 
+        }
+
+        res.json({
+            ok: true,
+            user: deletedUser
+        });
+    });
 });
 
 module.exports = app;
