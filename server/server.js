@@ -1,5 +1,6 @@
 require('./config/config');
 
+const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 
@@ -11,35 +12,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.get('/user', (req, res) => {
-    res.json('get usuario');
-});
+app.use( require('./routes/user'));
 
-app.post('/user', (req, res) => {
 
-    let body = req.body;
+mongoose.connect('mongodb://localhost:27017/cafe',{ useNewUrlParser: true }, (err, res) => {
 
-    if( body.name === undefined ) {
-        res.status(400).json({
-            ok: false,
-            message: 'Name is required'
-        })
-    } else {
-        res.json({
-            string: 'post usuario',
-            body
-        });
-    }
+    if( err ) throw err;
 
-});
+    console.log('BD online !!');
 
-app.put('/user/:id', (req, res) => {
-
-    let id = req.params.id;
-    res.json({
-        string: 'put usuario',
-        id
-    });
 });
 
 app.listen(process.env.PORT, () => {
