@@ -17,11 +17,18 @@ app.post('/user', (req, res) => {
 
     let body = req.body;
 
+    if( body.name === undefined ) {
+        res.status(400).json({
+            ok: false,
+            message: 'Name is required'
+        })
+    } else {
+        res.json({
+            string: 'post usuario',
+            body
+        });
+    }
 
-    res.json({
-        string: 'post usuario',
-        body
-    });
 });
 
 app.put('/user/:id', (req, res) => {
