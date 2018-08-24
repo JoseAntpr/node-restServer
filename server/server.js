@@ -1,3 +1,5 @@
+require('./config/config');
+
 const express = require('express');
 const app = express();
 
@@ -40,6 +42,6 @@ app.put('/user/:id', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     console.log('Escuchando puerto ', 3000);
 });
