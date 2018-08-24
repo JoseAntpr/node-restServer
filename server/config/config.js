@@ -25,11 +25,11 @@ Base de datos
 
 let urlDB;
 
-// if( process.env.NODE_ENV === 'dev' ) {
-//     console.log(environments.dev.mongoURL);
-//     urlDB = environments.dev.mongoURL;
-// } else {
+if( process.env.NODE_ENV === 'dev' ) {
+    console.log(environments.dev.mongoURL);
+    urlDB = environments.dev.mongoURL;
+} else {
     urlDB = environments.prod.mongoURL;
-//}
+}
 
 process.env.URLDB = urlDB;

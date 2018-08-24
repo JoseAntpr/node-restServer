@@ -3,7 +3,7 @@ const prod = {
 };
 
 const dev = {
-    mongoURL: 'mongodb://localhost:27017/cafe'
+    mongoURL: process.env.MONGO_URI
 }
 
 module.exports = {
