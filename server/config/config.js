@@ -21,7 +21,7 @@ process.env.NODE_ENV =  process.env.NODE_ENV || 'dev';
 =======================
 Base de datos
 =======================
-*/
+*/process.env.MONGO_URI
 
 let urlDB;
 
