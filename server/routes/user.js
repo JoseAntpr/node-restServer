@@ -5,11 +5,11 @@ const _ = require('underscore');
 
 const User = require('../models/user');
 
-const { verifyToken } = require('../middlewares/authentication');
+const { verifyToken, verify_AdminRole } = require('../middlewares/authentication');
 
 const app = express();
 
-app.get('/user', verifyToken, (req, res) => {
+app.get('/user', [verifyToken], (req, res) => {
 
     let from = Number(req.query.from) || 0; 
     let limit = Number(req.query.limit) || 5;
@@ -44,7 +44,7 @@ app.get('/user', verifyToken, (req, res) => {
         });
 });
 
-app.post('/user', (req, res) => {
+app.post('/user', [verifyToken, verify_AdminRole], (req, res) => {
 
     let body = req.body;
 
@@ -71,7 +71,7 @@ app.post('/user', (req, res) => {
 
 });
 
-app.put('/user/:id', verifyToken, (req, res) => {
+app.put('/user/:id', [verifyToken, verify_AdminRole], (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'state']);
