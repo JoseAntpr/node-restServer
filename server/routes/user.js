@@ -71,7 +71,7 @@ app.post('/user', (req, res) => {
 
 });
 
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', verifyToken, (req, res) => {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'state']);
@@ -92,7 +92,7 @@ app.put('/user/:id', (req, res) => {
     
 });
 
-app.delete('/user/:id', (req, res) => { 
+app.delete('/user/:id', verifyToken,(req, res) => { 
 
     let id = req.params.id;
 
