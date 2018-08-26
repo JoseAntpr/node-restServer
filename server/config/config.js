@@ -11,6 +11,20 @@ process.env.PORT = process.env.PORT || 3000;
 
 /* 
 =======================
+Vencimiento del TOKEN
+=======================
+*/
+process.env.EXPIRES = '4h';
+
+/* 
+=======================
+Seed de autenticacion
+=======================
+*/
+process.env.SEED = process.env.SEED || 'este-es-el-seed-desarollo';
+
+/* 
+=======================
 Entorno
 =======================
 */
@@ -21,12 +35,11 @@ process.env.NODE_ENV =  process.env.NODE_ENV || 'dev';
 =======================
 Base de datos
 =======================
-*/process.env.MONGO_URI
+*/
 
 let urlDB;
 
 if( process.env.NODE_ENV === 'dev' ) {
-    console.log(environments.dev.mongoURL);
     urlDB = environments.dev.mongoURL;
 } else {
     urlDB = environments.prod.mongoURL;
