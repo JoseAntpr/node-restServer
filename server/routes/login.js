@@ -39,7 +39,7 @@ app.post('/login', (req, res) => {
 
         let token = jwt.sign({
             user: userDB
-        }, 'este-es-el-seed-desarollo', { expiresIn: process.env.EXPIRES })
+        }, process.env.SEED, { expiresIn: process.env.EXPIRES })
 
         res.json({
             ok: true,
