@@ -80,7 +80,7 @@ app.put('/user/:id', [verifyToken, verify_AdminRole], (req, res) => {
         if( err ) {
             return res.status(400).json({
                 ok: false,
-                err: err
+                error: err
             }); 
         }
 
