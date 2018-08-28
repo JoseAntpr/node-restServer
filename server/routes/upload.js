@@ -17,8 +17,24 @@ app.put('/upload', (req, res) => {
     }
 
     let file = req.files.file;
+    let fileNameSplit = file.name.split('.');
+    let extension = fileNameSplit[ fileNameSplit.length -1 ];
 
-    file.mv('uploads/filename.jpg', (err) => {
+    // Valid extensions
+    let validExtensions = ['png', 'jpg', 'gif', 'jpeg'];
+
+    if( validExtensions.indexOf( extension ) < 0 ) {
+        return res.status(400).json({
+            ok: false,
+            error: {
+                message: 'Valid extensions are ' + validExtensions.join(', '),
+                ext: extension
+            }
+        });
+    }
+
+
+    file.mv(`uploads/${file.name}`, (err) => {
         if(err) return res.status(500).json({
             ok: false,
             error: err
