@@ -63,11 +63,46 @@ app.put('/upload/:type/:id', (req, res) => {
             error: err
         });
 
-        res.json({
-            ok: true,
-            message: 'Image uploaded'
-        });
+        // Image is uploaded
+
+        userImage(id, res, fileName)
     });
 });
+
+function userImage(id, res, fileName) {
+    User.findById(id, ( err, userDB ) => {
+        if(err) {
+            return res.status(500).json({
+                ok: false,
+                error: err
+            });
+        }
+
+        if( !userDB ) {
+            return res.status(400).json({
+                ok: false,
+                error: {
+                    message: 'User not exists'
+                }
+            });
+        }
+
+        userDB.img = fileName;
+
+        userDB.save((err, userSaved) => {
+            res.json({
+                ok: true,
+                user: userSaved,
+                img: fileName
+            });
+        });
+
+
+    });
+}
+
+function productImage() {
+
+}
 
 module.exports = app;
