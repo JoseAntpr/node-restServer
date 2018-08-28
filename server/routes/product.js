@@ -86,6 +86,34 @@ app.get("/product/:id", (req, res) => {
 
 /* 
 =======================
+Search product
+=======================
+*/
+
+app.get('/product/search/:term', verifyToken, (req, res) => {
+
+    let term = req.params.term;
+
+    let regex = new RegExp(term, 'i');
+
+    Product.find({name: regex})
+        .populate("category", "descripcion")
+        .exec( (err, products) => {
+            if (err) {
+                return res.status(500).json({
+                  ok: false,
+                  error: err
+                });
+            }
+            res.json({
+                ok: true,
+                products: products
+            })
+        });
+});
+
+/* 
+=======================
 Create product
 =======================
 */
@@ -167,7 +195,7 @@ app.delete("/product/:id", verifyToken, (req, res) => {
 
   let id = req.params.id;
 
-  Product.findByIdAndRemove(id, (err, productDB) => {
+  Product.findById(id, (err, productDB) => {
     if (err) {
       res.status(500).json({
         ok: false,
@@ -184,10 +212,25 @@ app.delete("/product/:id", verifyToken, (req, res) => {
       });
     }
 
-    res.json({
-      ok: true,
-      message: "Product deleted"
+    productDB.available = false;
+
+    productDB.save((err, productDeleted) => {
+
+        if (err) {
+            res.status(500).json({
+              ok: false,
+              error: error
+            });
+        }
+
+        res.json({
+            ok: true,
+            product: productDeleted,
+            message: "Product deleted"
+        });
+
     });
+
   });
 });
 
