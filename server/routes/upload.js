@@ -68,7 +68,11 @@ app.put('/upload/:type/:id', (req, res) => {
 
         // Image is uploaded
 
-        userImage(id, res, fileName)
+        if(type === 'users'){
+            userImage(id, res, fileName);
+        } else {
+            productImage(id, res, fileName);
+        }
     });
 });
 
@@ -108,8 +112,40 @@ function userImage(id, res, fileName) {
     });
 }
 
-function productImage() {
+function productImage(id, res, fileName) {
+    Product.findById(id, ( err, productDB ) => {
+        if(err) {
+            deleteFile(fileName, 'products');
+            return res.status(500).json({
+                ok: false,
+                error: err
+            });
+        }
 
+        if( !productDB ) {
+            deleteFile(fileName, 'products');
+            return res.status(400).json({
+                ok: false,
+                error: {
+                    message: 'Product not exists'
+                }
+            });
+        }
+
+        deleteFile(productDB.img, 'products');
+
+        productDB.img = fileName;
+
+        productDB.save((err, productSaved) => {
+            res.json({
+                ok: true,
+                user: productSaved,
+                img: fileName
+            });
+        });
+
+
+    });
 }
 
 function deleteFile(filename, type) {
