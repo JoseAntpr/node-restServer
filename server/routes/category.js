@@ -19,8 +19,10 @@ app.get("/category", (req, res) => {
   let limit = Number(req.query.limit) || 10;
 
   Category.find({})
+    .sort('description')
     .skip(from)
     .limit(limit)
+    .populate('user', 'name email')
     .exec((err, categories) => {
       if (err) {
         res.status(500).json({
@@ -54,6 +56,7 @@ app.get("/category/:id", (req, res) => {
   let id = req.params.id;
 
   Category.findById(id)
+    .populate('user', 'name email')
     .exec((err, categoryBD) => {
         if (err) {
         res.status(400).json({
