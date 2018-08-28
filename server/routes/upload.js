@@ -3,10 +3,17 @@ const fileUpload = require('express-fileupload');
 
 const app = express();
 
+const User = require('../models/user');
+const Product = require('../models/product');
+
 // default options
 app.use(fileUpload());
 
-app.put('/upload', (req, res) => {
+app.put('/upload/:type/:id', (req, res) => {
+
+    let type = req.params.type;
+    let id = req.params.id;
+
     if( !req.files ) {
         return res.status(400).json({
             ok: false,
@@ -15,6 +22,20 @@ app.put('/upload', (req, res) => {
             }
         });
     }
+
+    // Valid types
+
+    let validTypes = ['products', 'users'];
+
+    if( validTypes.indexOf(type) < 0 ) {
+        return res.status(400).json({
+            ok: false,
+            error: {
+                message: 'Valid types are ' + validTypes.join(', '),
+            }
+        });
+    }
+
 
     let file = req.files.file;
     let fileNameSplit = file.name.split('.');
@@ -33,8 +54,10 @@ app.put('/upload', (req, res) => {
         });
     }
 
+    // Change File name
+    let fileName = `${id}-${ new Date().getMilliseconds()}.${ extension }`
 
-    file.mv(`uploads/${file.name}`, (err) => {
+    file.mv(`uploads/${ type }/${fileName}`, (err) => {
         if(err) return res.status(500).json({
             ok: false,
             error: err
